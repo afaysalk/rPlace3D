@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!--
+  Thanks to the THREE.js people for making the original Voxel Painter!
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="manifest" href="manifest.webmanifest"/>
+    <title>rPlace3D</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.144.0/build/three.module.js",
+            "eventemitter3": "https://unpkg.com/eventemitter3@latest/umd/eventemitter3.min.js",
+            "dragger": "https://cdn.skypack.dev/-/three-dragger@v1.0.2-pTfxvahnmJMIYoHaBGdM/dist=es2019,mode=imports/optimized/three-dragger.js",
+            "dragger-utils": "/js/lib/dragger/utils.js"
+        }
+    }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+    <script type="module" src="/js/script.js"></script>
+  </head>
+  <body>
+    <noscript>
+      <div id="overlay">
+        <h3 style="color: white; margin: 50px">This browser does not support or has disabled Javascript, which, as you may have guessed, <u>is</u> required for three.js to function. Be sure to enable Javascript and stop using Netscape Navigator.
+      </div>
+    </noscript>
+    <div class="popup" id="options" style="display: none">
+      <div style="text-align: center; margin-top: 5px; position: sticky; top: 0; background-color: gray">
+        <span style="vertical-align: top;">Options<a class="helplink" style="float: right; color: white;" onclick="javascript:document.getElementById('options').style.display = 'none'">X</a></span>
+        <hr>
+      </div>
+      <div>
+        <label for="brightness">Ambient light</label>
+        <input id="brightness" type="range" max="1" step="0.01" value="1"/>
+      </div>
+      <hr>
+      <div>
+        <label for="volume">Audio volume</label>
+        <input id="volume" type="range" max="1" step="0.01" value="0.5"/>
+      </div>
+      <hr>
+      <div>
+        <span>Note: Fancy graphics are computationally demanding (especially shadows.) Use with caution!</span>
+        <br>
+        <br>
+        <input id="fancy" type="checkbox"/>
+        <label for="fancy">Enable fancy graphics <span style="color:red"><b>EXPERIMENTAL</b></span></label>
+        <div style="margin-left: 10px">
+          <div>
+            <input id="shadows" type="checkbox" disabled checked/>
+            <label for="shadows">Enable shadows</label>
+          </div>
+          <div>
+            <label for="quality">Shadow quality</label>
+            <select id="quality" disabled>
+              <option value="256">Low</option>
+              <option value="512" selected>Medium</option>
+              <option value="1024">High</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id = "loading-wrapper">
+      <div id = "loading-wrapper-inner">
+        <div id = "loading">
+          <img id = "logo" src = "gingerindustries.jpg" width = 200 height = 200/>
+          <h2 id="stage">Loading</h2>
+          <progress id="progressBar" max="0" value="0"></progress>
+          <div id = "percent" style="color: gray; font-size: small; line-height: 10px">   </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="help" class="popup" style="display: none">
+      <div style="text-align: center; margin-top: 5px; position: sticky; top: 0; background-color: gray">
+        <span style="vertical-align: top;">Help<a class="helplink" style="float: right; color: white;" onclick="javascript:document.getElementById('help').style.display = 'none'">X</a></span>
+        <hr>
+      </div>
+      <h3><u>Pen tool:</u></h3>
+      <p>
+        <strong>click</strong>: add voxel, <strong>shift + click</strong>: remove voxel. use color selector to change block color
+      </p>
+      <h3><u>Rectangle tool:</u></h3>
+      <p>
+        <strong>click</strong>: Position cube
+        <br><br>
+        <strong>Drag handles</strong>: Resize cube
+        <br><br>
+        <strong>click on buildplate</strong>: Finalize cube
+        <br><br>
+        <strong>click outside buildplate</strong>: Cancel cube
+      </p>
+      <h3><u>Paint tool:</u></h3>
+      <p>
+        Use the <strong>color selector</strong> to choose color, and click blocks to change their color.
+      </p>
+      <h3><u>Fill Color tool:</u></h3>
+      <p>
+        Use the <strong>color selector</strong> to choose color. Click on a block to set all blocks matching its color to the selected color.
+      </p>
+      <hr>
+      <p>
+        Made by Faysal Khaldi <a class = "helplink" style="color: white" href="https://threejs.org/examples/webgl_interactive_voxelpainter"><u>Original by THREE.js</u></a> See <a class = "helplink" style="color: white" href="/LICENSE"><u>LICENSE</u></a> for more info.
+    </div>
+    <div id="statusbar" style="display: none;">
+      <span id="status"></span>
+    </div>
+    <div id = "toolbar">
+      <a class="helplink" onclick="javascript:document.getElementById('help').style.display = 'initial'">Help</a>
+      <a class="helplink" onclick="javascript:document.getElementById('options').style.display = 'initial'">Options</a>
+      <hr>
+      <div>
+        Tool:
+      </div>
+      <div>
+        <input type="radio" accesskey="p" id="pen" name="tool" value="pen"
+         checked>
+        <label for="pen">Pen</label>
+      </div>
+      <div>
+        <input type="radio" accesskey="r" id="rect" name="tool" value="rect">
+        <label for="rect">Rectangle</label>
+      </div>
+      <div>
+        <input type="radio" accesskey="a" id="paint" name="tool" value="paint">
+        <label for="paint">Paint</label>
+      </div>
+      <div>
+        <input type="radio" accesskey="f" id="fill-color" name="tool" value="fill-color">
+        <label for="fill-color">Fill Color</label>
+      </div>
+      <div>
+        Material:
+      </div>
+      <div>
+        <input type="radio" id="normal" name="material" value="normal" checked>
+        <label for="normal">Normal</label>
+      </div>
+      <div>
+        <input type="radio" id="glass" name="material" value="glass">
+        <label for="glass">Glass</label>
+      </div>
+      <div>
+        <input type="radio" id="glow" name="material" value="glow">
+        <label for="glow">Glow</label>
+      </div>
+      <div>
+        <input style = "margin-left: 2px" id="color" type="color" value="#feb74c"> <label for="pick" class="custom-button">Pick</label><button id="pick"></button>
+      </div>
+      <hr/>
+      <div>
+        <input type="checkbox" id="delete" name="delete">
+        <label for="delete">Delete</label>
+      </div>
+      <div>
+        <label for="clear" class = "custom-button">Clear buildplate</label>
+        <button id="clear"></button>
+      </div>
+      <div>
+        <label for="camera-reset" class = "custom-button">Reset camera</label>
+        <button id="camera-reset"></button>
+      </div>
+      <hr>
+      <div>
+        <label for="download" class = "custom-button">Download VXM</label>
+        <button id="download"></button>
+      </div>
+      <div>
+        <label for="file-upload" class="custom-button">Upload a VXM</label> <input id="file-upload" type="file" accept=".vxm"/>
+      </div>
+      <hr>
+      <div>
+        <label for="downloadGLB" class = "custom-button">Download GLB</label>
+        <button id="downloadGLB"></button>
+      </div>
+      <hr>
+      <div>
+        <label for="postToGallery" class = "custom-button">Post to Gallery</label>
+        <button id="postToGallery"></button>
+      </div>
+      <!--
+      <div>
+        <label for="downloadSTL" class = "custom-button">Download STL</label>
+        <button id="downloadSTL"></button>
+      </div>
+      -->
+      <div>
+        <label for="viewAR" class = "custom-button">View in AR</label>
+        <button id="viewAR"></button>
+      </div>
+    </div>
+    <div id="info">
+      <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - rPlace3D
+		</div>
+    <div id="toolbar">
+    </div>
+  </body>
+</html>
