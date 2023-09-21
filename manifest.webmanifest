@@ -1,0 +1,16 @@
+{
+  "name": "Voxel Painter 2",
+  "start_url": "/index.html",
+  "scope": "/",
+  "description": "A voxel-placing 3d art maker",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "500x500",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "background_color": "grey",
+  "theme_color": "grey"
+}
