@@ -1,0 +1,169 @@
+body {
+	margin: 0;
+	background-color: gray;
+	background-color: #f0f0f0;
+    color: #444;
+	font-family: Monospace;
+	font-size: 13px;
+	line-height: 24px;
+	overscroll-behavior: none;
+}
+a {
+    color: #08f;
+    text-decoration: none;
+}
+canvas {
+  z-index: 0;
+}
+#statusbar {
+  position: absolute;
+  font-size: 16px;
+  right: 0;
+  bottom: 0;
+}
+.popup {
+  position: absolute;
+  top: 25%;
+  left: calc(50% - 15vw);
+  height: 20vw;
+  width: 30vw;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 5px;
+  background-color: gray;
+  color: white;
+  opacity: .9;
+  line-height: 1;
+  overflow-y: scroll;
+  z-index: 4;
+}
+.popup * {
+  opacity: 1;
+}
+.popup p {
+  word-wrap: break-word;
+}
+.helplink {
+  cursor: pointer;
+  text-decoration: none;
+}
+.helplink:hover {
+  text-decoration: underline;
+  font-weight: bold;
+}
+.monofont {
+  font-family: Monospace;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+#info {
+	position: absolute;
+	top: 0px;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: center;
+	z-index: 1; /* TODO Solve this in HTML */
+}
+
+
+.dg.ac {
+	z-index: 2 !important; /* TODO Solve this in HTML */
+}
+#toolbar {
+  position: absolute;
+  z-index: 3;
+  height: 100%;
+  overflow-y: auto;
+}
+#overlay {
+	position: absolute;
+	font-size: 16px;
+	z-index: 3;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background: rgba(0,0,0,0.7);
+  opacity: 1;
+  color: white;
+}
+
+	#overlay button {
+		background: transparent;
+		border: 1px solid rgb(255, 255, 255);
+		border-radius: 4px;
+		color: #ffffff;
+		padding: 12px 18px;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+#notSupported {
+	width: 50%;
+	margin: auto;
+	background-color: #f00;
+	margin-top: 20px;
+	padding: 10px;
+}
+input[type="file"] {
+    display: none;
+}
+button {
+    display: none;
+}
+.custom-button {
+    background-color: #ccc;
+    border: 1px solid #ccc;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 2px
+}
+.custom-button:hover {
+  background-color: #ddd;
+}
+#toolbar div {
+  margin-left: 30px!important;
+}
+#toolbar .helplink{
+ margin-left:20px;
+}
+#loading-wrapper {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  display: table;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background-color: white;
+}
+#loading-wrapper-inner {
+  padding: 0;
+  margin: 0;
+  display: table-cell;
+  vertical-align: middle;
+}
+#loading {
+  margin: 0 auto;
+  width: 500px;
+  font-family: sans-serif;
+  text-align: center;
+}
